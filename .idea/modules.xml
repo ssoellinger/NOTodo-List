@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/NOTodoslist.iml" filepath="$PROJECT_DIR$/NOTodoslist.iml" />
+      <module fileurl="file://$PROJECT_DIR$/NOTodo-List.iml" filepath="$PROJECT_DIR$/NOTodo-List.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
