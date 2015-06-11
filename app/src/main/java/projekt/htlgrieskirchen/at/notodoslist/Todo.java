@@ -5,19 +5,19 @@ import java.util.Date;
 /**
  * Created by Simon on 11.06.2015.
  */
-public class Todos {
+public class Todo {
     String title,description;
     Prority prority;
     Date deadline;
 
-    public Todos(String title, String description, Prority prority, Date deadline) {
+    public Todo(String title, String description, Prority prority, Date deadline) {
         this.title = title;
         this.description = description;
         this.prority = prority;
         this.deadline = deadline;
     }
 
-    public Todos() {
+    public Todo() {
     }
 
     public void setTitle(String title) {
