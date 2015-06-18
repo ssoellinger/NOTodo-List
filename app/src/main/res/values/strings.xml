@@ -6,4 +6,7 @@
     <string name="priority">Priorität</string>
     <string name="description">Beschreibung</string>
     <string name="title">Titel</string>
+    <string name="deadline">Enddatum</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

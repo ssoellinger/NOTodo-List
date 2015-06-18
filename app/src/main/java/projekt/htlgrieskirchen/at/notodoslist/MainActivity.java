@@ -2,17 +2,56 @@ package projekt.htlgrieskirchen.at.notodoslist;
 
 import android.app.Activity;
 
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 
 
-public class MainActivity extends Activity {
 
+public class MainActivity extends Activity implements ListFragment.OnSelectionChangedListener,LocationListener {
+    private DetailFragment detailFragment;
+    private boolean showDetail = false;
+    private ListFragment listFragment;
+
+    private static LocationManager locMan = null;
+    EditText e1;
+    EditText e2;
+    EditText e3;
+    EditText e4;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        detailFragment = (DetailFragment) getFragmentManager().findFragmentById(R.id.frag_detail);
+        listFragment= (ListFragment) getFragmentManager().findFragmentById(R.id.frag_list);
+        showDetail = detailFragment != null && detailFragment.isInLayout();
+    }
+    @Override
+    public void onSelectionChanged(long pos, Todo item) {
+        if(showDetail)
+            detailFragment.show(pos, item);
+        else
+            callFragmentActivity(pos, item);
+    }
+    private void callFragmentActivity(long pos, Todo item)
+    {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("POS", pos);
+        intent.putExtra("ITEM", item);
+        startActivity(intent);
+
+        setSpinner();
+
     }
 
     @Override
@@ -36,4 +75,35 @@ public class MainActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+
+
+    public void setSpinner()
+    {
+        Spinner mySpinner = (Spinner) findViewById(R.id.spinner);
+        mySpinner.setAdapter(new ArrayAdapter<Prority>(this, android.R.layout.simple_spinner_item, Prority.values()));
+    }
+
+
 }
