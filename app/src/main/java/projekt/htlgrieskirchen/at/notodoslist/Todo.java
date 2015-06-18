@@ -1,11 +1,12 @@
 package projekt.htlgrieskirchen.at.notodoslist;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Simon on 11.06.2015.
  */
-public class Todo {
+public class Todo implements Serializable {
     String title,description;
     Prority prority;
     Date deadline;
