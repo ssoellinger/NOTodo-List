@@ -5,7 +5,11 @@
       <GradleProjectSettings>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+<<<<<<< Updated upstream
         <option name="gradleJvm" value="1.7" />
+=======
+        <option name="gradleHome" value="D:\Java\android-studio\ide\gradle\gradle-2.2.1" />
+>>>>>>> Stashed changes
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -16,3 +20,4 @@
     </option>
   </component>
 </project>
+

@@ -10,6 +10,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+
 
 
 public class MainActivity extends Activity implements ListFragment.OnSelectionChangedListener,LocationListener {
@@ -26,6 +30,7 @@ public class MainActivity extends Activity implements ListFragment.OnSelectionCh
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         detailFragment = (DetailFragment) getFragmentManager().findFragmentById(R.id.frag_detail);
         listFragment= (ListFragment) getFragmentManager().findFragmentById(R.id.frag_list);
@@ -44,6 +49,9 @@ public class MainActivity extends Activity implements ListFragment.OnSelectionCh
         intent.putExtra("POS", pos);
         intent.putExtra("ITEM", item);
         startActivity(intent);
+
+        setSpinner();
+
     }
 
     @Override
@@ -68,6 +76,7 @@ public class MainActivity extends Activity implements ListFragment.OnSelectionCh
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public void onLocationChanged(Location location) {
 
@@ -87,4 +96,14 @@ public class MainActivity extends Activity implements ListFragment.OnSelectionCh
     public void onProviderDisabled(String provider) {
 
     }
+
+
+
+    public void setSpinner()
+    {
+        Spinner mySpinner = (Spinner) findViewById(R.id.spinner);
+        mySpinner.setAdapter(new ArrayAdapter<Prority>(this, android.R.layout.simple_spinner_item, Prority.values()));
+    }
+
+
 }
