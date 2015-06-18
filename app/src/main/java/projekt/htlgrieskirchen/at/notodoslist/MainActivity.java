@@ -2,17 +2,25 @@ package projekt.htlgrieskirchen.at.notodoslist;
 
 import android.app.Activity;
 
+import android.app.Fragment;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends Activity {
-
+public class MainActivity extends Activity implements ListFragment.OnSelectionChangedListener {
+    public final static String TAG="FragmentsDemo";
+    private DetailFragment detailFragment;
+    private boolean showDetail = false;
+    public static LocationManager locMan = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        detailFragment =(DetailFragment)getFragmentManager().findFragmentById(R.id.frag_detail);
+        showDetail =detailFragment !=null && detailFragment.isInLayout();
     }
 
     @Override
@@ -35,5 +43,20 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSelectionChanged(int pos, Todo item) {
+        if (showDetail)
+            detailFragment.show(pos, item);
+        else
+            callFragmentActivity(pos, item);
+    }
+    private void callFragmentActivity(int pos, Todo item) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("POS", pos);
+        intent.putExtra("ITEM", item);
+        startActivity(intent);
+
     }
 }
