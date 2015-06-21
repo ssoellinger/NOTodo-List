@@ -3,16 +3,13 @@ package projekt.htlgrieskirchen.at.notodoslist;
 import android.app.Activity;
 
 
-import android.app.Fragment;
 import android.content.Intent;
 
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 
 
@@ -78,12 +75,6 @@ public class MainActivity extends Activity implements ListFragment.OnSelectionCh
 
 
 
-
-    public void setSpinner()
-    {
-        Spinner mySpinner = (Spinner) findViewById(R.id.spinner);
-        mySpinner.setAdapter(new ArrayAdapter<Prority>(this, android.R.layout.simple_spinner_item, Prority.values()));
-    }
 
 
 

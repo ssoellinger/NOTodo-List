@@ -17,14 +17,21 @@
         android:hint="@string/description"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"/>
+        android:layout_marginBottom="15dp"
+        android:layout_weight="0.16" />
 
-    <EditText
-        android:id="@+id/dialog_priority"
-        android:hint="@string/priority"
-        android:layout_width="fill_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"/>
+        android:text="@string/priority"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/textView6" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner2"
+        android:layout_gravity="center_horizontal" />
 
     <LinearLayout
         android:orientation="horizontal"

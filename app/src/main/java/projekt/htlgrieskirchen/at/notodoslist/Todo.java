@@ -8,13 +8,13 @@ import java.util.Date;
  */
 public class Todo implements Serializable {
     String title,description;
-    Prority prority;
+    Priority priority;
     Date deadline;
 
-    public Todo(String title, String description, Prority prority, Date deadline) {
+    public Todo(String title, String description, Priority priority, Date deadline) {
         this.title = title;
         this.description = description;
-        this.prority = prority;
+        this.priority = priority;
         this.deadline = deadline;
     }
 
@@ -29,8 +29,8 @@ public class Todo implements Serializable {
         this.description = description;
     }
 
-    public void setPrority(Prority prority) {
-        this.prority = prority;
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
 
     public void setDeadline(Date deadline) {
@@ -45,11 +45,16 @@ public class Todo implements Serializable {
         return description;
     }
 
-    public Prority getPrority() {
-        return prority;
+    public Priority getPriority() {
+        return priority;
     }
 
     public Date getDeadline() {
         return deadline;
+    }
+
+    @Override
+    public String toString() {
+        return title;
     }
 }

@@ -2,7 +2,6 @@ package projekt.htlgrieskirchen.at.notodoslist;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -80,10 +78,10 @@ public class ListFragment extends Fragment {
         items = new ArrayList<Todo>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
         date = (Date) dateFormat.parse("1.1.2001");
-        items.add(new Todo("Smartphone", "Lg Nexus 5, 5 Zoll", Prority.Wichtig, date));
-        items.add(new Todo("Spielzeug", "Bruder Traktor", Prority.Keine_Prioritaet, date));
-        items.add(new Todo("Netzwerktechnik", "Cisco Layer 3 Switch 3560 ", Prority.Normal, date));
-        items.add(new Todo("Server", "Windows Server 2008R2", Prority.Wichtig, date));
+        items.add(new Todo("Smartphone", "Lg Nexus 5, 5 Zoll", Priority.Wichtig, date));
+        items.add(new Todo("Spielzeug", "Bruder Traktor", Priority.Keine_Prioritaet, date));
+        items.add(new Todo("Netzwerktechnik", "Cisco Layer 3 Switch 3560 ", Priority.Normal, date));
+        items.add(new Todo("Server", "Windows Server 2008R2", Priority.Wichtig, date));
     }
 
     public void onAttach(Activity activity) {

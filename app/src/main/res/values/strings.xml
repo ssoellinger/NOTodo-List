@@ -9,4 +9,10 @@
     <string name="deadline">Enddatum</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string-array name="priority_array">
+        <item>Wichtig</item>
+        <item>Normal</item>
+        <item>Keine</item>
+
+    </string-array>
 </resources>
