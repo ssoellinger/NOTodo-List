@@ -24,7 +24,7 @@ public class TodoContentProvider extends ContentProvider {
 
     private static final String AUTHORITY = "projekt.htlgrieskirchen.at.notodoslist.TodoContentProvider";
 
-    private static final String BASE_PATH = "offers";
+    private static final String BASE_PATH = "todos";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
 
     public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/todos";
@@ -58,7 +58,7 @@ public class TodoContentProvider extends ContentProvider {
                 break;
             case TODO_ID:
                 // adding the ID to the original query
-                queryBuilder.appendWhere(TodosTbl.TodoId + "=" + uri.getLastPathSegment());
+                queryBuilder.appendWhere(TodosTbl.Todoid + "=" + uri.getLastPathSegment());
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -111,11 +111,11 @@ public class TodoContentProvider extends ContentProvider {
                 String id = uri.getLastPathSegment();
                 if (TextUtils.isEmpty(selection)) {
                     rowsDeleted = sqlDB.delete(TodosTbl.TABLE_NAME,
-                            TodosTbl.TodoId + "=" + id,
+                            TodosTbl.Todoid + "=" + id,
                             null);
                 } else {
                     rowsDeleted = sqlDB.delete(TodosTbl.TABLE_NAME,
-                            TodosTbl.TodoId + "=" + id
+                            TodosTbl.Todoid + "=" + id
                                     + " and " + selection,
                             selectionArgs);
                 }
@@ -144,12 +144,12 @@ public class TodoContentProvider extends ContentProvider {
                 if (TextUtils.isEmpty(selection)) {
                     rowsUpdated = sqlDB.update(TodosTbl.TABLE_NAME,
                             values,
-                            TodosTbl.TodoId + "=" + id,
+                            TodosTbl.Todoid + "=" + id,
                             null);
                 } else {
                     rowsUpdated = sqlDB.update(TodosTbl.TABLE_NAME,
                             values,
-                            TodosTbl.TodoId + "=" + id
+                            TodosTbl.Todoid + "=" + id
                                     + " and "
                                     + selection,
                             selectionArgs);
@@ -160,7 +160,7 @@ public class TodoContentProvider extends ContentProvider {
         return rowsUpdated;
     }
     private void checkColumns(String[] projection) {
-        String[] available = { TodosTbl.Title,TodosTbl.Description,TodosTbl.Deadline,TodosTbl.Priority };
+        String[] available = TodosTbl.ALL_COLUMNS;
         if (projection != null) {
             HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
             HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));

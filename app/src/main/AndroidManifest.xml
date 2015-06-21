@@ -31,6 +31,7 @@
         </provider>
         <activity android:name=".PrefsActivity" />
         <activity android:name=".DetailActivity"/>
+        <activity android:name=".New_Todo"/>
     </application>
 
 </manifest>
