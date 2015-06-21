@@ -7,12 +7,13 @@
     tools:context=".MainActivity"
     >
 
-    <fragment
+<fragment
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:name="projekt.htlgrieskirchen.at.notodoslist.DetailFragment"
         android:id="@+id/frag_detail"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.81" />
+
 
 </LinearLayout>

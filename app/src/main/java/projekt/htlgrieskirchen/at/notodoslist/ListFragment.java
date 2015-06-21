@@ -20,20 +20,26 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+
+
+
+
 /**
  * Created by Simon on 11.06.2015.
  */
+
 public class ListFragment extends Fragment {
     public static final String TAG = MainActivity.TAG;
     ListView lstMain;
-    ArrayList<Todo> items= new ArrayList<Todo>();
+    ArrayList<Todo> items = new ArrayList<Todo>();
     private OnSelectionChangedListener listener;
     private static final DateFormat DF_DATE = SimpleDateFormat
             .getDateInstance(DateFormat.MEDIUM);
     private static final DateFormat DF_TIME = SimpleDateFormat
             .getTimeInstance(DateFormat.MEDIUM);
     Date date;
-    public void onCreate(Bundle savedInstanceState){
+
+    public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "oncreat left");
         super.onCreate(savedInstanceState);
         Log.d(TAG, "oncreat left2");
@@ -44,12 +50,12 @@ public class ListFragment extends Fragment {
         }
         Log.d(TAG, "oncreat left3");
     }
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
-    {
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "oncreatView left");
-        View view =inflater.inflate(R.layout.fragment_list,container);
+        View view = inflater.inflate(R.layout.fragment_list, container);
         Log.d(TAG, "oncreatView left2");
-        lstMain= (ListView) view.findViewById(R.id.listView);
+        lstMain = (ListView) view.findViewById(R.id.listView);
         Log.d(TAG, "oncreatView left3");
         lstMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -62,46 +68,43 @@ public class ListFragment extends Fragment {
         Log.d(TAG, "oncreatView left5");
         return view;
     }
-    public void onStart()
-    {
+
+    public void onStart() {
         Log.d(TAG, "onStart ListFragment");
         super.onStart();
-        final ArrayAdapter<Todo> adapter=new ArrayAdapter<Todo>(getActivity(),android.R.layout.simple_list_item_1,items);
+        final ArrayAdapter<Todo> adapter = new ArrayAdapter<Todo>(getActivity(), android.R.layout.simple_list_item_1, items);
         lstMain.setAdapter(adapter);
     }
+
     private void fillArrayList() throws ParseException {
-        items =new ArrayList<Todo>();
+        items = new ArrayList<Todo>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
         date = (Date) dateFormat.parse("1.1.2001");
-        items.add(new Todo("Smartphone","Lg Nexus 5, 5 Zoll",Prority.Wichtig,date));
-        items.add(new Todo("Spielzeug","Bruder Traktor",Prority.Keine_Prioritaet,date));
-        items.add(new Todo("Netzwerktechnik","Cisco Layer 3 Switch 3560 ",Prority.Normal,date));
-        items.add(new Todo( "Server", "Windows Server 2008R2", Prority.Wichtig,date) );
+        items.add(new Todo("Smartphone", "Lg Nexus 5, 5 Zoll", Prority.Wichtig, date));
+        items.add(new Todo("Spielzeug", "Bruder Traktor", Prority.Keine_Prioritaet, date));
+        items.add(new Todo("Netzwerktechnik", "Cisco Layer 3 Switch 3560 ", Prority.Normal, date));
+        items.add(new Todo("Server", "Windows Server 2008R2", Prority.Wichtig, date));
     }
-    public void onAttach(Activity activity)
-    {
+
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if(activity instanceof OnSelectionChangedListener)
-        {
-            listener=(OnSelectionChangedListener) activity;
-        }
-        else
-        {
+        if (activity instanceof OnSelectionChangedListener) {
+            listener = (OnSelectionChangedListener) activity;
+        } else {
             Toast.makeText(getActivity(), "Activity" + activity.toString() + "does not implement required LeftFragment.OnSelectionChangedListener", Toast.LENGTH_LONG).show();
         }
     }
-    public interface OnSelectionChangedListener
-    {
-        public void onSelectionChanged(int pos,Todo item);
+
+    public interface OnSelectionChangedListener {
+        public void onSelectionChanged(int pos, Todo item);
     }
 
-    public void entrySelected(int pos)
-    {
-        Todo item =items.get(pos);
-        if(listener !=null)
-        {
-            listener.onSelectionChanged(pos,item);
+    public void entrySelected(int pos) {
+        Todo item = items.get(pos);
+        if (listener != null) {
+            listener.onSelectionChanged(pos, item);
         }
+
 
     }
 }

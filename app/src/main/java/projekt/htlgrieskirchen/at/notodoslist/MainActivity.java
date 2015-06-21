@@ -2,12 +2,19 @@ package projekt.htlgrieskirchen.at.notodoslist;
 
 import android.app.Activity;
 
+
 import android.app.Fragment;
 import android.content.Intent;
+
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+
 
 
 public class MainActivity extends Activity implements ListFragment.OnSelectionChangedListener {
@@ -15,12 +22,20 @@ public class MainActivity extends Activity implements ListFragment.OnSelectionCh
     private DetailFragment detailFragment;
     private boolean showDetail = false;
     public static LocationManager locMan = null;
+
+
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         detailFragment =(DetailFragment)getFragmentManager().findFragmentById(R.id.frag_detail);
         showDetail =detailFragment !=null && detailFragment.isInLayout();
+
+
+
     }
 
     @Override
@@ -45,6 +60,7 @@ public class MainActivity extends Activity implements ListFragment.OnSelectionCh
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public void onSelectionChanged(int pos, Todo item) {
         if (showDetail)
@@ -59,4 +75,16 @@ public class MainActivity extends Activity implements ListFragment.OnSelectionCh
         startActivity(intent);
 
     }
+
+
+
+
+    public void setSpinner()
+    {
+        Spinner mySpinner = (Spinner) findViewById(R.id.spinner);
+        mySpinner.setAdapter(new ArrayAdapter<Prority>(this, android.R.layout.simple_spinner_item, Prority.values()));
+    }
+
+
+
 }
