@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class MyTodoOpenHelper extends SQLiteOpenHelper
 {
-    private final static String DB_NAME = "todos.db";
+    private final static String DB_NAME = "todo.db";
     private final static int DB_VERSRION = 1;
 
     public MyTodoOpenHelper(Context context) {

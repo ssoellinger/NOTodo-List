@@ -10,12 +10,22 @@ public class Todo implements Serializable {
     String title,description;
     Priority priority;
     Date deadline;
+    boolean done=false;
 
     public Todo(String title, String description, Priority priority, Date deadline) {
         this.title = title;
         this.description = description;
         this.priority = priority;
         this.deadline = deadline;
+
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
     }
 
     public Todo() {

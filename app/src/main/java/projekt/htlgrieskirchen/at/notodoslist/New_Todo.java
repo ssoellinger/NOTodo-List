@@ -3,6 +3,8 @@ package projekt.htlgrieskirchen.at.notodoslist;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,13 +20,27 @@ public class New_Todo extends Activity {
     EditText e2;
     Spinner spinner;
     CalendarView cv;
-    ListFragment listFragment;
+
+    private Uri todoUri;
     public static final String TAG = MainActivity.TAG;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_todo);
-        listFragment =(ListFragment) getFragmentManager().findFragmentById(R.id.frag_list);
+
         addTodo();
+        Bundle extras = getIntent().getExtras();
+
+        // check from the saved Instance
+        todoUri = (savedInstanceState == null) ? null : (Uri) savedInstanceState
+                .getParcelable(TodoContentProvider.CONTENT_ITEM_TYPE);
+
+        // Or passed from the other activity
+        if (extras != null) {
+            todoUri = extras
+                    .getParcelable(TodoContentProvider.CONTENT_ITEM_TYPE);
+
+            fillData(todoUri);
+        }
     }
     private void addTodo() {
 
@@ -42,7 +58,32 @@ public class New_Todo extends Activity {
 
 
             }
+    private void fillData(Uri uri) {
+        String[] projection = TodosTbl.ALL_COLUMNS;
+        Cursor cursor = getContentResolver().query(uri, projection, null, null,
+                null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            String category = cursor.getString(cursor
+                    .getColumnIndexOrThrow(TodosTbl.Priority));
 
+            for (int i = 0; i < spinner.getCount(); i++) {
+
+                String s = (String) spinner.getItemAtPosition(i);
+                if (s.equalsIgnoreCase(category)) {
+                    spinner.setSelection(i);
+                }
+            }
+
+            e1.setText(cursor.getString(cursor
+                    .getColumnIndexOrThrow(TodosTbl.Title)));
+            e2.setText(cursor.getString(cursor
+                    .getColumnIndexOrThrow(TodosTbl.Description)));
+
+            // always close the cursor
+            cursor.close();
+        }
+    }
 
     public void saveState(View view) {
         String titel = String.valueOf(e1.getText());
@@ -54,26 +95,17 @@ public class New_Todo extends Activity {
         String priority = (String) spinner.getSelectedItem();
 
 
-        switch (priority) {
-            case "Wichtig":
-                vals.put("Priority", String.valueOf(Priority.Wichtig));
-                break;
-
-            case "Normal":
-                vals.put("Priority", String.valueOf(Priority.Normal));
-                break;
-            case "Keine":
-                vals.put("Priority", String.valueOf(Priority.Keine_Prioritaet));
-                break;
-            default:
-                vals.put("Priority", String.valueOf(Priority.Keine_Prioritaet));
-        }
+        vals.put("Priority",priority);
 
                 vals.put("Deadline", cv.getDate());
-
-
-                getContentResolver().insert(TodoContentProvider.CONTENT_URI, vals);
-
+                vals.put("Done", "false");
+if(todoUri==null) {
+    getContentResolver().insert(TodoContentProvider.CONTENT_URI, vals);
+}
+        else
+{
+    getContentResolver().update(todoUri, vals, null, null);
+}
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
         }
@@ -83,6 +115,8 @@ public class New_Todo extends Activity {
         Intent intent=new Intent(this,MainActivity.class);
         startActivity(intent);
     }
+
+
 
 
 
