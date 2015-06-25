@@ -106,7 +106,8 @@ Intent intent=new Intent(this,MainActivity.class);
         Log.d(TAG, " "+where);
         return new CursorLoader(this, TodoContentProvider.CONTENT_URI,TodosTbl.ALL_COLUMNS,where,
                 null,
-                null);
+                TodosTbl.SORT_ORDER);
+
 
     }
 

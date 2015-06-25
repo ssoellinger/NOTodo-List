@@ -12,6 +12,7 @@ import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -106,8 +107,16 @@ public class New_Todo extends Activity {
     public void saveState(View view) {
         String titel = String.valueOf(e1.getText());
         String description = String.valueOf(e2.getText());
+        simpleDateFormat.format(System.currentTimeMillis());
+        Calendar cal= simpleDateFormat.getCalendar();
+        int year=cal.get(Calendar.YEAR);
+        int month=cal.get(Calendar.MONTH);
+        int day=cal.get(Calendar.DAY_OF_MONTH);
+        //if(dp.getYear()>=year&&dp.getMonth()>=month&&dp.getDayOfMonth()>=day)
 
-        String date=String.valueOf(dp.getDayOfMonth()+"-"+(dp.getMonth()+1)+"-"+dp.getYear());
+            String date = String.valueOf(dp.getDayOfMonth() + "-" + (dp.getMonth() + 1) + "-" + dp.getYear());
+
+
 
         ContentValues vals = new ContentValues();
         vals.put("Title", titel);
