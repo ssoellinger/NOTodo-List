@@ -119,7 +119,8 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
     }
 
     private void callFragmentActivity(long id, Todo item) {
-        Intent intent = new Intent(this, DetailActivity.class);
+        Intent intenHAX kernel module is not installed!
+t = new Intent(this, DetailActivity.class);
         intent.putExtra("POS", id);
         intent.putExtra("ITEM", item);
         startActivity(intent);
