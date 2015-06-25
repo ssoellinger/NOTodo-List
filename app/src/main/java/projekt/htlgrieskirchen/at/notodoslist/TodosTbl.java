@@ -11,7 +11,9 @@ public class TodosTbl {
     public final static String Priority = "Priority";
     public final static String Deadline = "Deadline";
     public final static String Done ="Done";
-
+    public static final int Wichtig = 0;
+    public static final int Normal = 1;
+    public static final int Keine = 2;
 
     public static final String[] ALL_COLUMNS = new String[] {Todoid + " AS _id", Title, Description, Priority, Deadline,Done};
 
@@ -28,6 +30,7 @@ public class TodosTbl {
                     ")";
 
     public static final String STMT_DELETE = "DELETE FROM" + TABLE_NAME;
+    public static final String SORT_ORDER= Deadline;
     public static final String STMT_INSERT =
             "INSERT INTO" + TABLE_NAME +
                     "(" + Title + "," + Description + "," + Priority + "," + Deadline +","+Done +")" +

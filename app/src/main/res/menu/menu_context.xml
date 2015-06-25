@@ -2,4 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/loeschen"
         android:title="Löschen" />
+    <item android:id="@+id/erledigt"
+        android:title="Erledigt" />
 </menu>

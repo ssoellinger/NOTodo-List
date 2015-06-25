@@ -4,14 +4,17 @@ import android.app.Activity;
 
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +30,7 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
     public final static String TAG = "FragmentsDemo";
 
 
-
+String where= null;
     EditText e1;
     EditText e2;
     Spinner spinner;
@@ -40,7 +43,16 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
         Log.d(TAG, "oncreat main");
         setContentView(R.layout.activity_main);
         lstMain = (ListView) findViewById(R.id.listView);
+        Intent intent=getIntent();
+        if(intent.getExtras()!=null) {
+            where= intent.getStringExtra("Done");
 
+        }
+        else
+        {
+            where = "Done='false' or Done=null";
+
+        }
         fillArrayList();
 
 
@@ -52,6 +64,7 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
                 entrySelected(id);
             }
         });
+        registerForContextMenu(lstMain);
     }
 
     @Override
@@ -75,6 +88,14 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
         } else if (id == R.id.new_todo) {
             Intent intent =new Intent(this,New_Todo.class);
             startActivity(intent);
+
+        }
+        else if(id==R.id.history)
+        {
+            where="Done='true'";
+Intent intent=new Intent(this,MainActivity.class);
+            intent.putExtra("Done",where);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -82,17 +103,20 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this, TodoContentProvider.CONTENT_URI,TodosTbl.ALL_COLUMNS,"Done='false' or Done=null",
+        Log.d(TAG, " "+where);
+        return new CursorLoader(this, TodoContentProvider.CONTENT_URI,TodosTbl.ALL_COLUMNS,where,
                 null,
-                null);
+                TodosTbl.SORT_ORDER);
+
 
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         String [] from = new String[] {TodosTbl.Title, TodosTbl.Description,TodosTbl.Priority,TodosTbl.Deadline};
-        int[] to = new int[] {R.id.lblTitel, R.id.lblDescription, R.id.lblPriority, R.id.lblDeadline};
-        Log.d(TAG, " list "+data.getColumnName(0));
+        int[] to = new int[] {R.id.lblTitle, R.id.lblDescription, R.id.lblPriority, R.id.lblDeadline};
+        Log.d(TAG, " list " + data.getColumnName(0));
+
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.list_row, data, from, to, 0);
         Log.d(TAG, " list2 main");
 
@@ -103,30 +127,9 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-    }
-
-/*
-
-    @Override
-    public void onSelectionChanged(long id, Todo item) {
-        if (showDetail) {
-            Log.d(TAG, "oncreat main3");
-            detailFragment.show(id, item);
-            Log.d(TAG, "oncreat main4");
-        }
-        else
-            callFragmentActivity(id, item);
-    }
-
-    private void callFragmentActivity(long id, Todo item) {
-        Intent intenHAX kernel module is not installed!
-t = new Intent(this, DetailActivity.class);
-        intent.putExtra("POS", id);
-        intent.putExtra("ITEM", item);
-        startActivity(intent);
 
     }
-*/
+
 private Todo getTodo(Uri uri)
 {
     String[] projection = TodosTbl.ALL_COLUMNS;
@@ -153,23 +156,10 @@ private Todo getTodo(Uri uri)
     }
     return todo;
 }
-    /*   public void onStart() {
-           Log.d(TAG, "onStart ListFragment");
-           super.onStart();
-           final ArrayAdapter<Todo> adapter = new ArrayAdapter<Todo>(getActivity(), android.R.layout.simple_list_item_1, items);
-           lstMain.setAdapter(adapter);
-       }
-   */
+
     public void fillArrayList() {
         getLoaderManager().initLoader(0, null, this);
-         /*    items = new ArrayList<Todo>();
-     SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
-      date = (Date) dateFormat.parse("1.1.2001");
-        items.add(new Todo("Smartphone", "Lg Nexus 5, 5 Zoll", Priority.Wichtig, date));
-        items.add(new Todo("Spielzeug", "Bruder Traktor", Priority.Keine_Prioritaet, date));
-        items.add(new Todo("Netzwerktechnik", "Cisco Layer 3 Switch 3560 ", Priority.Normal, date));
-        items.add(new Todo("Server", "Windows Server 2008R2", Priority.Wichtig, date));
-    */
+
     }
 
 
@@ -194,6 +184,48 @@ private Todo getTodo(Uri uri)
 
 
 
+    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        this.getMenuInflater().inflate(R.menu.menu_context, menu);
+        if(!where.contentEquals("Done='false' or Done=null")) {
+            menu.getItem(1).setTitle("Rueckgaeng machen");
+        }
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.loeschen)
+        {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            Uri uri = Uri.parse(TodoContentProvider.CONTENT_URI + "/" + info.id);
+            this.getContentResolver().delete(uri, null, null);
+            fillArrayList();
+        }
+        else if(id==R.id.erledigt)
+        {AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            Uri uri = Uri.parse(TodoContentProvider.CONTENT_URI + "/" + info.id);
+            ContentValues vals = new ContentValues();
+            if(where.contentEquals("Done='false' or Done=null")) {
+
+
+                vals.put("Done","true");
+
+            } else{
+
+                vals.put("Done","false");
+            }
+            getContentResolver().update(uri, vals, null, null);
+
+
+            Intent intent=new Intent(this,MainActivity.class);
+            startActivity(intent);
+        }
+        return super.onContextItemSelected(item);
     }
 
 

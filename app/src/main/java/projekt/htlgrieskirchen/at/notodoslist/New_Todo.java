@@ -9,8 +9,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Created by Simon on 21.06.2015.
@@ -19,8 +25,8 @@ public class New_Todo extends Activity {
     EditText e1;
     EditText e2;
     Spinner spinner;
-    CalendarView cv;
-
+    DatePicker dp;
+   SimpleDateFormat simpleDateFormat;
     private Uri todoUri;
     public static final String TAG = MainActivity.TAG;
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +60,9 @@ public class New_Todo extends Activity {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
                 spinner.setAdapter(adapter);
-                cv = (CalendarView) findViewById(R.id.calendarView);
+                dp = (DatePicker) findViewById(R.id.datePicker);
+        simpleDateFormat=new SimpleDateFormat("dd-MM-yyyy");
+
 
 
             }
@@ -79,6 +87,17 @@ public class New_Todo extends Activity {
                     .getColumnIndexOrThrow(TodosTbl.Title)));
             e2.setText(cursor.getString(cursor
                     .getColumnIndexOrThrow(TodosTbl.Description)));
+            try {
+                simpleDateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TodosTbl.Deadline)));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Calendar cal=simpleDateFormat.getCalendar();
+            int year=cal.get(Calendar.YEAR);
+            int month=cal.get(Calendar.MONTH);
+            int day=cal.get(Calendar.DAY_OF_MONTH);
+
+            dp.updateDate(year,month,day);
 
             // always close the cursor
             cursor.close();
@@ -88,6 +107,17 @@ public class New_Todo extends Activity {
     public void saveState(View view) {
         String titel = String.valueOf(e1.getText());
         String description = String.valueOf(e2.getText());
+        simpleDateFormat.format(System.currentTimeMillis());
+        Calendar cal= simpleDateFormat.getCalendar();
+        int year=cal.get(Calendar.YEAR);
+        int month=cal.get(Calendar.MONTH);
+        int day=cal.get(Calendar.DAY_OF_MONTH);
+        //if(dp.getYear()>=year&&dp.getMonth()>=month&&dp.getDayOfMonth()>=day)
+
+            String date = String.valueOf(dp.getDayOfMonth() + "-" + (dp.getMonth() + 1) + "-" + dp.getYear());
+
+
+
         ContentValues vals = new ContentValues();
         vals.put("Title", titel);
         vals.put("Description", description);
@@ -96,9 +126,9 @@ public class New_Todo extends Activity {
 
 
         vals.put("Priority",priority);
+        vals.put("Deadline",date);
 
-                vals.put("Deadline", cv.getDate());
-                vals.put("Done", "false");
+                vals.put("Done","false");
 if(todoUri==null) {
     getContentResolver().insert(TodoContentProvider.CONTENT_URI, vals);
 }
@@ -115,7 +145,21 @@ if(todoUri==null) {
         Intent intent=new Intent(this,MainActivity.class);
         startActivity(intent);
     }
+    public void done(View view)
+    {
+        ContentValues vals = new ContentValues();
+        vals.put("Done","true");
+        if(todoUri==null) {
+            getContentResolver().insert(TodoContentProvider.CONTENT_URI, vals);
+        }
+        else
+        {
+            getContentResolver().update(todoUri, vals, null, null);
+        }
 
+        Intent intent=new Intent(this,MainActivity.class);
+        startActivity(intent);
+    }
 
 
 
