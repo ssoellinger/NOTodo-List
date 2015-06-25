@@ -1,7 +1,9 @@
 package projekt.htlgrieskirchen.at.notodoslist;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -160,7 +163,6 @@ if(todoUri==null) {
         Intent intent=new Intent(this,MainActivity.class);
         startActivity(intent);
     }
-
 
 
 
