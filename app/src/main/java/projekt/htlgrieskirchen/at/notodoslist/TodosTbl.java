@@ -23,9 +23,9 @@ public class TodosTbl {
                     "(" +
                     Todoid + " INTEGER PRIMARY KEY AUTOINCREMENT ," +
                     Title  + " TEXT NOT NULL," +
-                    Description + " TEXT NOT NULL," +
-                    Priority    + " TEXT NOT NULL," +
-                    Deadline    + "  TEXT NOT NULL," +
+                    Description + " TEXT ," +
+                    Priority    + " TEXT ," +
+                    Deadline    + "  TEXT ," +
                     Done +" Boolean Not null"+
                     ")";
 

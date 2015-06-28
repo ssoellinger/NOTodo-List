@@ -50,7 +50,7 @@ String where= null;
         }
         else
         {
-            where = "Done='false' or Done=null";
+            where = "Done='false'";
 
         }
         fillArrayList();
@@ -188,9 +188,10 @@ private Todo getTodo(Uri uri)
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         this.getMenuInflater().inflate(R.menu.menu_context, menu);
-        if(!where.contentEquals("Done='false' or Done=null")) {
+        if(!where.contentEquals("Done='false'")) {
             menu.getItem(1).setTitle("Rueckgaeng machen");
         }
+
 
         super.onCreateContextMenu(menu, v, menuInfo);
     }
@@ -210,7 +211,7 @@ private Todo getTodo(Uri uri)
         {AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             Uri uri = Uri.parse(TodoContentProvider.CONTENT_URI + "/" + info.id);
             ContentValues vals = new ContentValues();
-            if(where.contentEquals("Done='false' or Done=null")) {
+            if(where.contentEquals("Done='false'")) {
 
 
                 vals.put("Done","true");

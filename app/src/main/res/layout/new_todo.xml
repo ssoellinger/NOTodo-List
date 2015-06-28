@@ -34,10 +34,10 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="448dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.41"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:layout_weight="0.13">
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,12 +45,23 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/deadline"
             android:id="@+id/textView5"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="15dp"
+            android:layout_weight="0.10" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Datum"
+            android:id="@+id/datum"
+            android:onClick="showDatePickerDialog" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Zeit"
+            android:id="@+id/zeit"
+            android:onClick="showTimePickerDialog" />
 
-        <DatePicker
-            android:layout_width="232dp"
-            android:layout_height="221dp"
-            android:id="@+id/datePicker" />
+
+
 
     </LinearLayout>
 

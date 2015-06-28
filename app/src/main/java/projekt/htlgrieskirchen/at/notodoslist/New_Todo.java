@@ -2,14 +2,18 @@ package projekt.htlgrieskirchen.at.notodoslist;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -17,9 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Simon on 21.06.2015.
@@ -29,6 +35,8 @@ public class New_Todo extends Activity {
     EditText e2;
     Spinner spinner;
     DatePicker dp;
+    Button datum;
+    Button zeit;
    SimpleDateFormat simpleDateFormat;
     private Uri todoUri;
     public static final String TAG = MainActivity.TAG;
@@ -63,8 +71,10 @@ public class New_Todo extends Activity {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
                 spinner.setAdapter(adapter);
-                dp = (DatePicker) findViewById(R.id.datePicker);
-        simpleDateFormat=new SimpleDateFormat("dd-MM-yyyy");
+                 zeit = (Button) findViewById(R.id.zeit);
+        datum = (Button) findViewById(R.id.datum);
+
+        simpleDateFormat=new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
 
 
@@ -90,18 +100,22 @@ public class New_Todo extends Activity {
                     .getColumnIndexOrThrow(TodosTbl.Title)));
             e2.setText(cursor.getString(cursor
                     .getColumnIndexOrThrow(TodosTbl.Description)));
-            try {
-                simpleDateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TodosTbl.Deadline)));
-            } catch (ParseException e) {
-                e.printStackTrace();
+            if(TodosTbl.Deadline!=null) {
+                try {
+                    simpleDateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TodosTbl.Deadline)));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Calendar cal = simpleDateFormat.getCalendar();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                int hour = cal.get(Calendar.HOUR_OF_DAY);
+                int minute = cal.get(Calendar.MINUTE);
+
+                datum.setText(day + "." + (month + 1) + "." + year);
+                zeit.setText(hour + ":" + minute);
             }
-            Calendar cal=simpleDateFormat.getCalendar();
-            int year=cal.get(Calendar.YEAR);
-            int month=cal.get(Calendar.MONTH);
-            int day=cal.get(Calendar.DAY_OF_MONTH);
-
-            dp.updateDate(year,month,day);
-
             // always close the cursor
             cursor.close();
         }
@@ -110,26 +124,36 @@ public class New_Todo extends Activity {
     public void saveState(View view) {
         String titel = String.valueOf(e1.getText());
         String description = String.valueOf(e2.getText());
-        simpleDateFormat.format(System.currentTimeMillis());
-        Calendar cal= simpleDateFormat.getCalendar();
-        int year=cal.get(Calendar.YEAR);
-        int month=cal.get(Calendar.MONTH);
-        int day=cal.get(Calendar.DAY_OF_MONTH);
-        //if(dp.getYear()>=year&&dp.getMonth()>=month&&dp.getDayOfMonth()>=day)
-
-            String date = String.valueOf(dp.getDayOfMonth() + "-" + (dp.getMonth() + 1) + "-" + dp.getYear());
-
-
-
         ContentValues vals = new ContentValues();
         vals.put("Title", titel);
         vals.put("Description", description);
+        if(!datum.getText().toString().equals("Datum")&&!zeit.getText().equals("Zeit")) {
+            try {
+                simpleDateFormat.parse(datum.getText().toString() + " " + zeit.getText().toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Calendar cal = simpleDateFormat.getCalendar();
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            int hour =cal.get(Calendar.HOUR_OF_DAY);
+            int minute =cal.get(Calendar.MINUTE);
+
+
+
+            String date = String.valueOf(day + "." +( month+1) + "." + year+" "+hour +":"+minute);
+            vals.put("Deadline", date);
+        }
+
+
+
 
         String priority = (String) spinner.getSelectedItem();
 
 
-        vals.put("Priority",priority);
-        vals.put("Deadline",date);
+        vals.put("Priority", priority);
+
 
                 vals.put("Done","false");
 if(todoUri==null) {
@@ -164,6 +188,50 @@ if(todoUri==null) {
         startActivity(intent);
     }
 
+    public void showTimePickerDialog(View v) {
+        DialogFragment newFragment = new TimePickerFragment();
+        if(!zeit.getText().toString().equals("Zeit")) {
+            Date buttonTime = null;
+            try {
+                buttonTime = SimpleDateFormat.getTimeInstance().parse(zeit.getText().toString()+":0");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
+            //Create a bundle to pass the date
+            Bundle currentTime = new Bundle();
+            currentTime.putLong("setTime", buttonTime.getTime());
+
+            //Pass the bundle to the fragment
+
+            newFragment.setArguments(currentTime);
+        }
+
+
+        newFragment.show(getFragmentManager(), "timePicker");
+
+
+    }
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        if(!datum.getText().toString().equals("Datum")) {
+            Date buttonDate = null;
+            try {
+                buttonDate = SimpleDateFormat.getDateInstance().parse(datum.getText().toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            //Create a bundle to pass the date
+            Bundle currentDate = new Bundle();
+            currentDate.putLong("setDate", buttonDate.getTime());
+
+            //Pass the bundle to the fragment
+
+            newFragment.setArguments(currentDate);
+        }
+        newFragment.show(getFragmentManager(), "datePicker");
+
+    }
 
 }
