@@ -1,5 +1,6 @@
 package projekt.htlgrieskirchen.at.notodoslist;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -9,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -39,12 +41,14 @@ public class New_Todo extends Activity {
     Button zeit;
    SimpleDateFormat simpleDateFormat;
     private Uri todoUri;
+    private Intent mServiceIntent;
     public static final String TAG = MainActivity.TAG;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_todo);
 
         addTodo();
+        mServiceIntent = new Intent(getApplicationContext(), PingService.class);
         Bundle extras = getIntent().getExtras();
 
         // check from the saved Instance
@@ -81,12 +85,17 @@ public class New_Todo extends Activity {
             }
     private void fillData(Uri uri) {
         String[] projection = TodosTbl.ALL_COLUMNS;
+
         Cursor cursor = getContentResolver().query(uri, projection, null, null,
                 null);
+
         if (cursor != null) {
+
             cursor.moveToFirst();
+           Log.d(TAG,"id: "+ cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
             String category = cursor.getString(cursor
                     .getColumnIndexOrThrow(TodosTbl.Priority));
+
 
             for (int i = 0; i < spinner.getCount(); i++) {
 
@@ -100,7 +109,7 @@ public class New_Todo extends Activity {
                     .getColumnIndexOrThrow(TodosTbl.Title)));
             e2.setText(cursor.getString(cursor
                     .getColumnIndexOrThrow(TodosTbl.Description)));
-            if(TodosTbl.Deadline!=null) {
+            if(cursor.getString(cursor.getColumnIndexOrThrow(TodosTbl.Deadline))!=null) {
                 try {
                     simpleDateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TodosTbl.Deadline)));
                 } catch (ParseException e) {
@@ -127,6 +136,9 @@ public class New_Todo extends Activity {
         ContentValues vals = new ContentValues();
         vals.put("Title", titel);
         vals.put("Description", description);
+        mServiceIntent.putExtra(CommonConstants.EXTRA_MESSAGE, titel);
+        mServiceIntent.setAction(CommonConstants.ACTION_PING);
+        mServiceIntent.putExtra(TodoContentProvider.CONTENT_ITEM_TYPE, todoUri);
         if(!datum.getText().toString().equals("Datum")&&!zeit.getText().equals("Zeit")) {
             try {
                 simpleDateFormat.parse(datum.getText().toString() + " " + zeit.getText().toString());
@@ -137,13 +149,18 @@ public class New_Todo extends Activity {
             int year = cal.get(Calendar.YEAR);
             int month = cal.get(Calendar.MONTH);
             int day = cal.get(Calendar.DAY_OF_MONTH);
-            int hour =cal.get(Calendar.HOUR_OF_DAY);
-            int minute =cal.get(Calendar.MINUTE);
+            int hour = cal.get(Calendar.HOUR_OF_DAY);
+            int minute = cal.get(Calendar.MINUTE);
 
 
-
-            String date = String.valueOf(day + "." +( month+1) + "." + year+" "+hour +":"+minute);
+            String date = String.valueOf(day + "." + (month + 1) + "." + year + " " + hour + ":" + minute);
             vals.put("Deadline", date);
+            Calendar c= Calendar.getInstance();
+            int milliseconds = (int) (cal.getTimeInMillis()-(c.getTimeInMillis()));
+            mServiceIntent.putExtra(CommonConstants.EXTRA_TIMER, milliseconds);
+
+            // Launches IntentService "PingService" to set timer.
+            startService(mServiceIntent);
         }
 
 
@@ -188,12 +205,13 @@ if(todoUri==null) {
         startActivity(intent);
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showTimePickerDialog(View v) {
         DialogFragment newFragment = new TimePickerFragment();
         if(!zeit.getText().toString().equals("Zeit")) {
             Date buttonTime = null;
             try {
-                buttonTime = SimpleDateFormat.getTimeInstance().parse(zeit.getText().toString()+":0");
+                buttonTime = SimpleDateFormat.getTimeInstance().parse(zeit.getText().toString() + ":0");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -212,6 +230,7 @@ if(todoUri==null) {
 
 
     }
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showDatePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
         if(!datum.getText().toString().equals("Datum")) {

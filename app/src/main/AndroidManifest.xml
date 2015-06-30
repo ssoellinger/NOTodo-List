@@ -33,6 +33,16 @@
         </provider>
         <activity android:name=".PrefsActivity" />
         <activity android:name=".New_Todo"/>
+        <service
+            android:name="PingService"
+            android:label="PingServiceLabel" android:enabled="true">
+        </service>
+        <activity
+            android:name="ResultActivity"
+            android:label="Take Action"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"/>
     </application>
 
 </manifest>
